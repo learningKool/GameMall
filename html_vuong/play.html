@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>::Index::</title>
+    <meta charset="utf-8">
+    <!-- css -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/jquery.jscrollpane.css" rel="stylesheet">
+    <!-- javascript -->
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" /> -->
+    <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.jscrollpane.min.js"></script>
+    <script type="text/javascript" src="js/mwheelIntent.js"></script>
+    <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            "use strict";
+            //$('#qLogin').modal();
+            $('.content-list').jScrollPane();
+            $('.log-box').jScrollPane();
+            $('.chat-content').jScrollPane();
+        });
+    </script>
+</head>
+<body>
+    <div class="main-body">
+        <!--left container body-->
+        <div class="body_l">
+            <div class="navbar" id="_topnavbar">
+                <div class="container">
+                    <div class="navbar-inner no-corner">
+                        <strong class="brand">Poker</strong>
+                        <a href="#qRecharge" role="button" class="btn-recharge" data-toggle="modal">Nạp tiền</a>
+                        <div class="navbar-elm pull-left">
+                            <a href="#" class="avatar">User Info</a>
+                            <span>latitude.d620</span><br />
+                            <span class="money">$6.7k</span>
+                            <a href="#" class="btn-logout" role="button"></a>
+                        </div>
+                        <div class="timer-box">
+                            <div class="timer-elm" style="height: 20px"></div>
+                            <span class="timer-text">20s</span>
+                        </div>
+                        <div class="pull-left support-elm">
+                            <span>Hỗ trợ trực tuyến</span>
+                            <p><a href="#" style="clear: both">Link to yahoo</a></p>
+                        </div>
+                        <div class="navbar-elm pull-right result-match">
+                            <p><strong>KẾT QUẢ TRONG BÀN</strong></p>
+                            <p>10<strong class="red_">♠</strong>7<strong class="black_">♥</strong>2<strong class="red_">♦</strong>3<strong class="black_">♣</strong></p>
+                        </div>
+                        <div class="navbar-elm pull-right">
+                            <a href="#" class="btn-home pull-right">Home</a>
+                            <a href="#" class="btn-help pull-right">Help</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="body">
+                <!--table-play-game-->
+                <div class="table-play-game">
+                    <a href="#" class="btn-join-match">Ready!</a>
+                    <span class="pull-right white folk-money"><strong>mức cược</strong>:<strong class="orange">10$</strong></span>
+                                        <!--Canvas-->
+                    <canvas class="canvas main"></canvas>
+                    <!--ban choi game-->
+                    <div class="table-game">
+                        <div class="player-box p-box1">
+                            <div class="name">Vương</div>
+                            <div class="avatar"></div>
+                            <div class="money">$<span>13.9k</span></div>
+                            <div class="level">Level:<span>7</span></div>
+                        </div>
+                        <div class="player-box p-box2">
+                            <div class="name">Ân</div>
+                            <div class="avatar"></div>
+                            <div class="money">$<span>13.9k</span></div>
+                            <div class="level">Level:<span>7</span></div>
+                        </div>
+                        <div class="player-box p-box3">
+                            <div class="name">Bảo</div>
+                            <div class="avatar"></div>
+                            <div class="money">$<span>13.9k</span></div>
+                            <div class="level">Level:<span>7</span></div>
+                        </div>
+                        <div class="player-box p-box4">
+                            <div class="name">Phúc</div>
+                            <div class="avatar"></div>
+                            <div class="money">$<span>13.9k</span></div>
+                            <div class="level">Level:<span>7</span></div>
+                        </div>
+                        <div class="player-box p-box5">
+                            <div class="name">Câu</div>
+                            <div class="avatar"></div>
+                            <div class="money">$<span>13.9k</span></div>
+                            <div class="level">Level:<span>7</span></div>
+                        </div>
+                        <div class="player-box p-box6">
+                            <div class="name">Khủng</div>
+                            <div class="avatar"></div>
+                            <div class="money">$<span>13.9k</span></div>
+                            <div class="level">Level:<span>7</span></div>
+                        </div>
+                    </div>
+                    <!--dat cuoc-->
+                    <div class="bottom-game">
+                        <div class=""></div>
+                    </div>
+                </div>
+                <!--chatbox & log game-->
+                <div class="chat-container">
+                    <div class="log-box">
+                        <p><span class="blue">latitude.d620</span> vừa đăng nhập</p>
+                        <p><span class="yellow">adminz</span> vừa thắng 2000$</p>
+                        <p><span class="blue">latitude.d620</span> vừa đăng nhập</p>
+                        <p><span class="yellow">adminz</span> vừa thắng 2000$</p>
+                        <p><span class="blue">latitude.d620</span> vừa đăng nhập</p>
+                        <p><span class="yellow">adminz</span> vừa thắng 2000$</p>
+                        <p><span class="blue">latitude.d620</span> vừa đăng nhập</p>
+                        <p><span class="yellow">adminz</span> vừa thắng 2000$</p>
+                        <p><span class="blue">latitude.d620</span> vừa đăng nhập</p>
+                        <p><span class="yellow">adminz</span> vừa thắng 2000$</p>
+                        <p><span class="blue">latitude.d620</span> vừa đăng nhập</p>
+                        <p><span class="yellow">adminz</span> vừa thắng 2000$</p>
+                        <p><span class="blue">latitude.d620</span> vừa đăng nhập</p>
+                        <p><span class="yellow">adminz</span> vừa thắng 2000$</p>
+                        <p><span class="blue">latitude.d620</span> vừa đăng nhập</p>
+                        <p><span class="yellow">adminz</span> vừa thắng 2000$</p>
+                    </div>
+                    <h6 style="line-height: 14px; padding: 0 10px">CHAT</h6>
+                    <div class="chat-box">
+                        <div class="chat-content">
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                            <p><span class="chat-elm">abc.zyx</span> Đặt hết đi thằng khùng</p>
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                            <p><span class="chat-elm">abc.zyx</span> Đặt hết đi thằng khùng</p>
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                            <p><span class="chat-elm">abc.zyx</span> Đặt hết đi thằng khùng</p>
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                            <p><span class="chat-elm">abc.zyx</span> Đặt hết đi thằng khùng</p>
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                            <p><span class="chat-elm">abc.zyx</span> Đặt hết đi thằng khùng</p>
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                            <p><span class="chat-elm">abc.zyx</span> Đặt hết đi thằng khùng</p>
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                            <p><span class="chat-elm">abc.zyx</span> Đặt hết đi thằng khùng</p>
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                            <p><span class="chat-elm">abc.zyx</span> Đặt hết đi thằng khùng</p>
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                            <p><span class="chat-elm">abc.zyx</span> Đặt hết đi thằng khùng</p>
+                        </div>
+                        <div class="chat-tool">
+                            <input type="text" class="chat-input" value="" placeholder="Nhập nội dung chat" />
+                            <a href="#" class="btn-enterchat">Enter</a>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!--right container body-->
+        <div class="body_r">
+            <div class="navbar-inner no-corner">
+                <h5>TIN TỨC - XẾP HẠNG</h5>
+            </div>
+            <div class="log-tab pull-right">
+                <ul id="_log_list" class="nav nav-tabs">
+                    <li class="active"><a id="news" href="#t_news" data-toggle="tab">Tin tức</a></li>
+                    <li><a id="progamer" href="#t_progamer" data-toggle="tab">Cao thủ</a></li>
+                    <li><a id="rich" href="#t_rich" data-toggle="tab">Đại gia</a></li>
+                </ul>
+                <div id="_log_list_content" class="tab-content">
+                    <div class="tab-pane active" id="t_news">
+                        <div class="t-news-item">
+                            <p>thodiahp</p>
+                            <div class="t-avatar" style="background: url(media/avatar_1.jpg) no-repeat;"></div>
+                            <span>ĂN <strong>$125.000</strong></span>
+                            <span>THẮNG 7 XÈNG</span>
+                        </div>
+                        <div class="t-news-item">
+                            <p>thodiahp</p>
+                            <div class="t-avatar" style="background: url(media/avatar_1.jpg) no-repeat;"></div>
+                            <span>ĂN <strong>$125.000</strong></span>
+                            <span>THẮNG 7 XÈNG</span>
+                        </div>
+                        <div class="t-news-item">
+                            <p>thodiahp</p>
+                            <div class="t-avatar" style="background: url(media/avatar_1.jpg) no-repeat;"></div>
+                            <span>ĂN <strong>$125.000</strong></span>
+                            <span>THẮNG 7 XÈNG</span>
+                        </div>
+                        <div class="t-news-item">
+                            <p>thodiahp</p>
+                            <div class="t-avatar" style="background: url(media/avatar_1.jpg) no-repeat;"></div>
+                            <span>ĂN <strong>$125.000</strong></span>
+                            <span>THẮNG 7 XÈNG</span>
+                        </div>
+                        <div class="t-news-item">
+                            <p>thodiahp</p>
+                            <div class="t-avatar" style="background: url(media/avatar_1.jpg) no-repeat;"></div>
+                            <span>ĂN <strong>$125.000</strong></span>
+                            <span>THẮNG 7 XÈNG</span>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="t_progamer">
+                        <div class="t-progamer-item even">
+                            <span>1. baymatxac</span><strong>$4,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>2. baymatxac1</span><strong>$3,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>3. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>4. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>5. baymatxac</span><strong>$4,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>6. baymatxac1</span><strong>$3,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>7. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>8. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>7. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>8. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>1. baymatxac</span><strong>$4,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>2. baymatxac1</span><strong>$3,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>3. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>4. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>5. baymatxac</span><strong>$4,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>6. baymatxac1</span><strong>$3,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>7. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>8. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>7. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>20. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="t_rich">
+                        <div class="t-progamer-item even">
+                            <span>1. baymatxac</span><strong>$4,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>2. baymatxac1</span><strong>$3,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>3. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>4. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>5. baymatxac</span><strong>$4,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>6. baymatxac1</span><strong>$3,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>7. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>8. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>7. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>8. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>1. baymatxac</span><strong>$4,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>2. baymatxac1</span><strong>$3,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>3. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>4. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>5. baymatxac</span><strong>$4,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>6. baymatxac1</span><strong>$3,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>7. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>8. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item even">
+                            <span>7. baymatxac2</span><strong>$2,000,000</strong>
+                        </div>
+                        <div class="t-progamer-item odd">
+                            <span>20. baymatxac3</span><strong>$1,000,000</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+        </div>
+    </div>
+    <div class="bottom-body">
+        <ul id="_audience_list" class="nav nav-tabs audience">
+            <li class="active"><a id="audience" href="#t_audience" data-toggle="tab">Khán giả</a>
+                <span class="counter a">(5)</span>
+            </li>
+            <li><a id="friends" href="#t_friends" data-toggle="tab">Bạn online</a>
+                <span class="counter b">(1)</span>
+            </li>
+            <li><a id="all_people" href="#t_all_people" data-toggle="tab">Tất cả</a>
+                <span class="counter c">(1)</span>
+            </li>
+        </ul>
+        <div id="_audience_list_content" class="tab-content">
+            <div class="tab-pane active" id="t_audience">
+                <div class="list-t-audience list-2">
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="t_friends">
+                <div class="list-t-friends list-2">
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="t_all_people">
+                <div class="list-t-all_people list-2">
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
