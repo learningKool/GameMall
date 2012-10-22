@@ -2,7 +2,8 @@
 
 // Global var for game
 var http = require('http')
-    , io = require('./socket.io');
+    , io = require('socket.io')
+	, mysql = require('mysql');
 
 var main_game = require("./game")
     , util = require("./util").util
@@ -28,7 +29,6 @@ log('Server is started!');
 
 log('try connect to database!');
 var db_config = require('./db_config');
-var mysql = require('./mysql');
 
 var db_connector = mysql.createClient(db_config);
 db_connector.query('USE ' + db_config.DATABASE);

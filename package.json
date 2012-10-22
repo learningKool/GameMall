@@ -2,14 +2,14 @@
   "name": "texas_node",
   "version": "0.0.1",
   "dependencies": {
-    "express": "2.5.x"
-	"socket.io": "0.9.10"
+    "express": "2.5.x",
+	"socket.io": "0.9.10",
 	"mysql": "0.9.6"
   },
   "engines": {
     "node": "0.8.x",
     "npm": "1.1.x"
-  }
+  },
   "author": {
 	"name": "baontp",
 	"email": "cardinnguyen85@yahoo.com"
