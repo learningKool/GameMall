@@ -6,11 +6,9 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "2.x.x",
+	"socket.io": "0.9.10",
 	"mysql": "0.9.6",
-	"formidable": "1.0.9",
-    "ejs": "*",
-    "stylus": "*"
+	"formidable": "1.0.9"
   },
     "author": {
 	"name": "baontp",
