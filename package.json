@@ -1,17 +1,20 @@
 {
-  "name": "texas_node",
+  "name": "apocker.server",
   "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
   "dependencies": {
-    "express": "2.5.x",
-	"socket.io": "0.9.10",
-	"mysql": "0.9.6"
+    "express": "3.0.0",
+	"mysql": "0.9.6",
+	"formidable": "1.0.9",
+    "ejs": "*",
+    "stylus": "*"
   },
-  "engines": {
-    "node": "0.8.x",
-    "npm": "1.1.x"
-  },
-  "author": {
+    "author": {
 	"name": "baontp",
 	"email": "cardinnguyen85@yahoo.com"
-  }
+  },
+  "readme": "This is poker Server using Node js"
 }

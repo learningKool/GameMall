@@ -1,9 +1,25 @@
 // Require HTTP module (to start server) and Socket.IO
 
 // Global var for game
-var http = require('http')
-    , io = require('socket.io')
-	, mysql = require('mysql');
+//var http = require('http')
+var httpServer = require("./http-server")
+    , router = require("./router")
+    , requestHandlers = require("./requestHandlers");
+var handle = {};
+    handle["/"] = requestHandlers.start;
+    handle["/start"] = requestHandlers.start;
+    handle["/upload"] = requestHandlers.upload;
+    handle["/show"] = requestHandlers.show;
+    handle["/index"] = requestHandlers.index;
+    handle["/js"] = requestHandlers.loadData;
+    handle["/css"] = requestHandlers.loadData;
+    handle["/emotions"] = requestHandlers.loadData;
+    handle["/img"] = requestHandlers.loadData;
+
+
+var io = require('socket.io')
+	, mysql = require('mysql')
+    , url = require("url");
 
 var main_game = require("./game")
     , util = require("./util").util
@@ -12,26 +28,22 @@ var main_game = require("./game")
 // List Client who is online 
 var clients = {};
 var game = main_game.game;
-//var util = new _util();
 
-// Start the server at port 8080
-var server = http.createServer(function(req, res){ 
-	
-	// Send HTML headers and message
-	res.writeHead(200,{ 'Content-Type': 'text/html' }); 
-	res.end('<h1>Hello Socket Lover!</h1>');
-});
-server.listen(8080);
+// Start the http server
+var server = httpServer.start(router.route, handle, 8080);
 
+//server.listen(8080);
+//log('HTTP Server is started!');
 // Create a Socket.IO instance, passing it our server
 var socket = io.listen(server);
 log('Server is started!');
 
-log('try connect to database!');
+log('trying connect to database....');
 var db_config = require('./db_config');
 
 var db_connector = mysql.createClient(db_config);
 db_connector.query('USE ' + db_config.DATABASE);
+log('connect to database success!');
 
 // Add a connect listener
 socket.on('connection', function(client){
@@ -188,10 +200,12 @@ socket.on('connection', function(client){
 
         if(new_table){
             new_table.hostChange = function(){
-                if(new_table.host_player){
-                    broadcastTable(util.EMIT_HOST_CHANGE, {host_name: new_table.host_player.username}, new_table);
-                }else{
-                    broadcastTable(util.EMIT_HOST_CHANGE, {host_name: 'none'}, new_table);
+                if(new_table.state == util.TABLE_STATE_WAITING){
+                    if(new_table.host_player){
+                        broadcastTable(util.EMIT_HOST_CHANGE, {host_name: new_table.host_player.username}, new_table);
+                    }else{
+                        broadcastTable(util.EMIT_HOST_CHANGE, {host_name: 'none'}, new_table);
+                    }
                 }
             };
 
@@ -425,7 +439,7 @@ socket.on('connection', function(client){
                 var player = {};
                 player['username'] = element.username;
                 player['playing_chip'] = element.playing_chip;
-                player['total_bet'] = element.total_bet;
+                player['total_bet'] = element.current_bet;
                 player['slot'] = element.slot;
                 players.push(player);
             });
@@ -507,7 +521,7 @@ socket.on('connection', function(client){
             player.hasCompleteTurn = true;
 
             broadcastTable(util.EMIT_BEAT_MATCH
-                , {total_bet: player.total_bet, slot: player.slot, playing_chip: player.playing_chip} , player.table);
+                , {total_bet: player.current_bet, slot: player.slot, playing_chip: player.playing_chip} , player.table);
 //            broadcastTable(util.EMIT_BEAT_MATCH, {type: 1, beat_type: data.type, username: player.username, value: result}
 //                , player.table, player.username);
 //            client.emit(util.EMIT_BEAT_MATCH, {type: 0, beat_type: data.type, value: result});
@@ -579,7 +593,7 @@ function newTurnOfPlayer(table){
 
         var diff =  table.current_bet - table.players[slot_can_play].current_bet;
         
-        if(table.current_bet == table.players[slot_can_play].current_bet){
+        if(diff == 0){
             stage = util.STAGE_PLAY_CHECK;
         }else if(diff >= table.players[slot_can_play].playing_chip){
             stage = util.STAGE_PLAY_ALL_ONLY;
@@ -614,23 +628,33 @@ function newTurnOfPlayer(table){
 }
 
 function processTable(table){
+
     // tìm slot kế tiếp có thể tố
 	var slot_can_play = table.findSlotForPlay(table.slot_can_play);
-    var playing_count = table.getPlayingPlayerCount();
-	if(slot_can_play == -1 || playing_count <= 1){
+    var player_count = table.getPlayingPlayerCount();
+
+	if(slot_can_play == -1 || player_count <= 1){
 		log('match turn is : ' + table.current_turn);
 		log('process next turn >>>>');
-		table.processNextTurn();
-		log('match turn after process is : ' + table.current_turn);
+		var playable_player_count = table.getPlayablePlayerCount();
+        do{
+            log('playable_player_count : ' + playable_player_count);
+            log('player_count : ' + player_count);
+            table.processNextTurn();
+            log('match turn after process is : ' + table.current_turn);
+            if (table.current_turn < util.TURN_SHOW_DOWN && player_count > 1) {
+                dealCard(table);
+            } else break;
 
-		if (table.current_turn >= util.TURN_SHOW_DOWN ||  playing_count <= 1) {
+        }while(playable_player_count <= 1)
+
+		if (table.current_turn >= util.TURN_SHOW_DOWN ||  player_count <= 1){
             log('going to end of match.\n Now calculating result of match....');
             table.state = util.TABLE_STATE_WAITING;
 
-			var winner = table.calculateResult();
-            if(winner){
-                winner.playing_chip += table.total_chip;
-
+			var hasWinner = table.calculateResult();
+            if(hasWinner){
+                var winners = table.getWinners();
                 var player_cards_list = [];
                 var hand_card;
                 table.players.forEach(function(element){
@@ -639,24 +663,28 @@ function processTable(table){
                         hand_card['slot'] = element.slot;
                         hand_card['cards'] = element.cards;
                         player_cards_list.push(hand_card);
+                        element.state = util.PLAYER_STATE_WAITING;
                     }
                 });
                 var content;
-                if(playing_count <= 1){
-                    content = 'All fold';
-                }else{
-                    content = card.getPokerHandRanking(winner.pocker_hand['type']);
+                if(player_count == 1){
+                    winners[0].content = 'All fold';
                 }
 
-                broadcastTable(util.EMIT_RESULT_MATCH, {type: 1, winner: winner.username
-                        , best_card: winner.pocker_hand['best_cards'], other_hand_cards: player_cards_list},
-                    table);
-                broadcastTable(util.EMIT_PLAYING_CHIP, {slot: winner.slot, chip: winner.playing_chip} , table);
-                broadcastTable(util.EMIT_RESULT_CONTENT, {slot: winner.slot, content: content, chip_win: table.total_chip}, table);
-                
-                responseEventLog(winner.username, " thắng " + table.total_chip + " chip!", util.STYLE_WHITE, table);
+                broadcastTable(util.EMIT_RESULT_MATCH, {type: 1, winners: winners, other_hand_cards: player_cards_list}, table);
+                var players = [];
+                var p;
+                winners.forEach(function(element){
+                    p = {};
+                    p['slot'] = element.slot;
+                    p['chip'] = element.playing_chip;
+                    players.push(p);
+                    responseEventLog(element.username, " thắng " + element.chip_win + " chip!", util.STYLE_WHITE, table);
+                });
+                broadcastTable(util.EMIT_PLAYING_CHIP, {players: players} , table);
+//                broadcastTable(util.EMIT_RESULT_CONTENT, {winners: winners}, table);
             }
-            
+
 			table.saveMatchLog(db_connector);
             log('End of match');
 
@@ -675,12 +703,16 @@ function processTable(table){
                 }
 
             }, game.REFRESH_TABLE_TIMEOUT);
-		} else {
-            if (!(table.players[table.slot_can_play] && table.players[table.slot_can_play].state == util.PLAYER_STATE_PLAYING)) {
+		}else{
+            if (!(table.players[table.slot_can_play]
+                    && table.players[table.slot_can_play].state == util.PLAYER_STATE_PLAYING
+                    && table.players[table.slot_can_play].playing_chip != 0))
+            {
                 table.slot_can_play = table.findSlotForPlay(table.slot_can_play);
             }
-            dealCard(table);
+//            dealCard(table);
             newTurnOfPlayer(table);
+            broadcastTable(util.EMIT_POT_LIST, {pot_list: table.pots}, table);
         }
 	}else{
 		table.slot_can_play = slot_can_play;
@@ -691,6 +723,7 @@ function processTable(table){
 function dealCard(table){
     log('deal card for turn : ' + table.current_turn);
     var data = table.deal_card();
+//    log('deal card for turn : ' + table.current_turn);
     data['turn'] = table.current_turn;
     broadcastCardInMatch(util.EMIT_DEAL_CARD, data, table);
 }

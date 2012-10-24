@@ -28,6 +28,7 @@ exports.util = {
     ,   EMIT_BEAT_MATCH     : 'beat_match'
     ,   EMIT_CURRENT_TURN   : 'current_turn'
     ,   EMIT_DEAL_CARD      : 'deal_card'
+    ,   EMIT_POT_LIST       : 'pot_list'
     ,   EMIT_RESULT_MATCH   : 'result_match'
     ,   EMIT_RESULT_CONTENT : 'result_content'
     ,   EMIT_REFRESH_TABLE  : 'refresh_table'

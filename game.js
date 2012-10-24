@@ -21,7 +21,7 @@ var game = {
     , TURN_TIME_OUT: 20000 // ~ 20 seconds
 
     // LOCATION OF GAME
-    , REFRESH_TABLE_TIMEOUT: 5000
+    , REFRESH_TABLE_TIMEOUT: 10000
     , LOCATION_LOBBY: 0
     , LOCATION_TABLE: 1
 
@@ -91,8 +91,8 @@ function Table(_id, host){
 
     this.player_number = 0;
 
-    // value in playing
-    this.isPlayAllIn = false;
+    /* variable in match */
+    this.hasPlayerAllIn = false;
 
     this.total_chip = 0;
 
@@ -106,9 +106,14 @@ function Table(_id, host){
 
     this.lastest_winner = null;
 
+    this.pots = [];
+    this.current_pot = null;
+
     this.card = new Card();
 
     this.cards_on_board = new Array(5);
+
+    this.playersOrderWithBestCard = [];
 }
 
 Table.prototype.setPlayerJoinMatch = function(player){
@@ -280,18 +285,82 @@ Table.prototype.changeSlot = function(player, new_slot){
     player.slot = new_slot;
 
     return player.slot;
-}
+};
 
 Table.prototype.processNextTurn = function(){
+
+    while(true){
+        var min_bet = 999999;
+        var isPlayAllIn = false;
+        var remainPlayerLength = 0;
+        var player_id = [];
+        var total_bet = 0;
+        this.players.forEach(function(element){
+            console.log('current bet : ' + element.current_bet);
+            if(element.current_bet > 0){
+                if(element.isPlayingAllIn || isPlayAllIn){
+                    isPlayAllIn = true;
+                    min_bet = Math.min(min_bet, element.current_bet);
+                }else{
+                    total_bet += element.current_bet;
+                    player_id.push(element.id);
+                }
+            }
+        });
+
+        console.log('min bet : ' + min_bet);
+        if(isPlayAllIn){
+            total_bet = 0;
+            player_id = [];
+            this.players.forEach(function(element){
+                 if(element.current_bet != 0 && element.state == util.PLAYER_STATE_PLAYING){
+                     console.log('username ' + element.username + ' current bet : ' + element.current_bet);
+                     element.current_bet -= min_bet;
+                     console.log('username ' + element.username + ' current bet : ' + element.current_bet);
+                     total_bet += min_bet;
+                     if(element.current_bet == 0){
+                         element.isPlayingAllIn = false;
+                     }
+                     player_id.push(element.id);
+                 }
+            });
+            console.log('player id: ' + player_id);
+            if(player_id.length == 0)
+                break;
+            this.current_pot.player_id_list = player_id;
+            this.current_pot.chip += total_bet;
+            this.current_pot = new Pot();
+            this.pots.push(this.current_pot);
+        }else{
+            console.log('isPlayAllIn false - player id: ' + player_id);
+            if(player_id.length == 1){
+                this.players.forEach(function(element){
+                    if(element.current_bet != 0 && element.state == util.PLAYER_STATE_PLAYING){
+                        element.playing_chip += element.current_bet;
+                    }
+                });
+                break;
+            }else if(player_id.length > 1){
+                this.current_pot.player_id_list = player_id;
+                this.current_pot.chip += total_bet;
+                console.log('current pot chip: ' + this.current_pot.chip);
+                console.log('list pot chip: ' + this.pots[0].chip);
+            }
+            break;
+        }
+    }
     // process to next turn;
     this.current_turn++;
     // set current bet to zero
     this.current_bet = 0;
 
+    this.hasPlayerAllIn = false;
+
     // reset playing properties of player
     this.players.forEach( function(element){
         element.current_bet = 0;
         element.hasCompleteTurn = false;
+        element.isPlayingAllIn = false;
     });
 };
 
@@ -303,7 +372,17 @@ Table.prototype.getPlayingPlayerCount = function(){
         }
     });
     return count;
-}
+};
+
+Table.prototype.getPlayablePlayerCount = function(){
+    var count = 0;
+    this.players.forEach( function(element){
+        if(element.state == util.PLAYER_STATE_PLAYING && element.playing_chip > 0){
+            count++;
+        }
+    });
+    return count;
+};
 
 Table.prototype.deal_card = function(){
     var data = {};
@@ -399,7 +478,7 @@ Table.prototype.startMatch = function(player){
 
     var _start_player;
     this.state = util.TABLE_STATE_PLAYING;
-    this.isPlayAllIn = false;
+    this.hasPlayerAllIn = false;
     this.current_turn = util.TURN_DEAL_IN_HAND;
 
     // tính người sẽ chơi đầu tiên
@@ -424,6 +503,7 @@ Table.prototype.startMatch = function(player){
     total_chip += this.current_bet;
     
     this.total_chip = total_chip;
+    this.card.reset();
 
     // get started time of match
     this.started_time = new Date().getTime();
@@ -434,6 +514,10 @@ Table.prototype.startMatch = function(player){
     });
 
     this.played_slot = played_slot;
+
+    this.pots = [];
+    this.current_pot = new Pot();
+    this.pots.push(this.current_pot);
 
 	return 1;
 };
@@ -449,36 +533,49 @@ Table.prototype.beat_all_in = function(player){
     if(player.isPlayingAllIn)
         return {type: -4, content: ' player can not play all-in again : maybe he is hacking'}; // player is playing all - in : maybe he's hacking
 
-
-//        this.isPlayAllIn = true;
     this.slot_begin = player.slot;
 
     // get smallest chip player in table use value of all in
-    var value_all_in = this.findSmallerPlayingChip();
-    if(value_all_in == -1)
-        return {type: -3, content: ' maybe wrong some thing with play all-in'}; // error : maybe wrong something
+//    var value_all_in = this.findSmallerPlayingChip();
+//    if(value_all_in == -1)
+//        return {type: -3, content: ' maybe wrong some thing with play all-in'}; // error : maybe wrong something
 
     // increase current bet of table by value
-    this.current_bet += value_all_in;
+//    this.current_bet += value_all_in;
+//
+//    // increase total chip of table by value
+//    this.total_chip += value_all_in;
+//
+//    // minus playing chip of player
+//    player.playing_chip -= value_all_in;
+//
+//    // increase total bet of player
+//    player.current_bet += value_all_in;
+//    player.total_bet += value_all_in;
 
-    // increase total chip of table by value
-    this.total_chip += value_all_in;
+    this.hasPlayerAllIn = true;
+    var dif = player.playing_chip - this.current_bet;
+    
+    if(dif > 0){
+        this.current_bet += dif;
+    }
 
-    // minus playing chip of player
-    player.playing_chip -= value_all_in;
+    var value = player.playing_chip;
+    this.total_chip += value;
 
-    // increase total bet of player
-    player.current_bet += value_all_in;
-    player.total_bet += value_all_in;
+    player.current_bet += value;
+    player.total_bet += value;
+    player.isPlayingAllIn = true;
+    player.playing_chip = 0;
 
-    // make sure every player who has current bet is smaller than current bet of table, must beat again
+    /*make sure every player who has current bet is smaller than current bet of table, must beat again*/
     var table_current_bet = this.current_bet;
     this.players.forEach( function(element){
         if(element.current_bet < table_current_bet)
                 element.hasCompleteTurn = false;
     });
 
-    return {type: value_all_in, content: ' OK!!'};
+    return {type: value, content: ' OK!!'};
 
 };
 
@@ -525,10 +622,12 @@ Table.prototype.beat_raise = function(player, new_value){
 //    console.log('new_value : ' + new_value);
     var dif = this.current_bet + new_value - player.current_bet;
 
-    if(player.playing_chip <= dif)
-        return {type: -3, content: ' player will play as all-in'}; // play as all-in
+    if(player.playing_chip < dif)
+        dif = player.playing_chip;
+//        return {type: -3, content: ' player will play as all-in'}; // play as all-in
+//
+//    // update current bet of table
 
-    // update current bet of table
     this.current_bet += new_value;
 
     // set slot begin a turn is this player
@@ -612,10 +711,11 @@ Table.prototype.beat_call = function(player){
 
     var dif = this.current_bet - player.current_bet;
 //    console.log('diff: ' + dif);
-    if(player.playing_chip <= dif)
+    if(player.playing_chip < dif)
         return {type: -3, content: ' player will play as all-in'}; // play as all-in
 
     // increase total chip of table by dif
+
     this.total_chip += dif;
 
     // minus playing chip of player
@@ -625,7 +725,7 @@ Table.prototype.beat_call = function(player){
     player.current_bet += dif;
     player.total_bet += dif;
 
-    return {type: dif, content: ' OK!!'};;
+    return {type: dif, content: ' OK!!'};
 
 };
 
@@ -642,18 +742,19 @@ Table.prototype.findSlotForPlay = function(old_slot){
             || (this.players[next_slot]
                 && (this.players[next_slot].hasCompleteTurn // this player is done the turn
                     || this.players[next_slot].state == util.PLAYER_STATE_WAITING // this player is not in match
-                    || this.players[next_slot].playing_chip <= 0) // this player is out of chip, can skip
+                    || this.players[next_slot].playing_chip <= 0 // this player is out of chip, can skip
+                    || this.players[next_slot].isPlayingAllIn) // this player is playing all-in
                 )
         ); //
 
     return next_slot;
 };
 
-Table.prototype.findSmallerPlayingChip = function(){
+Table.prototype.findSmallerBettingChip = function(){
     var value = 999999999;
     this.players.forEach(function(element){
-        if(element && element.state == util.PLAYER_STATE_PLAYING){
-            value = Math.min(value, element.playing_chip);
+        if(element && element.state == util.PLAYER_STATE_PLAYING && element.current_bet != 0){
+            value = Math.min(value, element.current_bet);
         }
     });
 
@@ -672,47 +773,100 @@ Table.prototype.calculateResult = function(){
     var winner;
 //    var winner_count = -1;
     var this_table = this;
+    this.playersOrderWithBestCard = [];
+    var players = [];
     this.players.forEach( function(element){
+
         if(element.state == util.PLAYER_STATE_PLAYING){
-            if(this_table.current_turn < util.TURN_THREE_CARD){
+            element.pocker_hand = {type: '', best_cards:[]};
+            if(this_table.current_turn <= util.TURN_FIFTH_CARD){
+                console.log('one winner');
                 winner = element;
-                this_table.winner = element;
-                return element;
+                players.push(element);
+                return;
             }
             element.pocker_hand = Card.getBestPokerHand(element.cards, cards_on_board);
-//            console.log('==============================');
-//            console.log('username: ' + element.username);
-//            console.log('poker type: ' + element.pocker_hand['type']);
-//            console.log('poker hand: ' + element.pocker_hand['best_cards']);
-            if(!winner){
-    //            winner_count = 0;
-                winner = element;
-            }else{
-                if( winner.pocker_hand['type'] < element.pocker_hand['type']
-                    || ( winner.pocker_hand['type'] == element.pocker_hand['type']
-                        && ( winner.pocker_hand['best_cards'][4] < element.pocker_hand['best_cards'][4]
-                            || ( winner.pocker_hand['best_cards'][4] == element.pocker_hand['best_cards'][4]
-                                && winner.pocker_hand['best_cards'][3] < element.pocker_hand['best_cards'][3] )
-                            || ( winner.pocker_hand['best_cards'][4] == element.pocker_hand['best_cards'][4]
-                                && winner.pocker_hand['best_cards'][3] == element.pocker_hand['best_cards'][3]
-                                && winner.pocker_hand['best_cards'][2] < element.pocker_hand['best_cards'][2] )
-                            || ( winner.pocker_hand['best_cards'][4] == element.pocker_hand['best_cards'][4]
-                                && winner.pocker_hand['best_cards'][3] == element.pocker_hand['best_cards'][3]
-                                && winner.pocker_hand['best_cards'][2] == element.pocker_hand['best_cards'][2]
-                                && winner.pocker_hand['best_cards'][1] < element.pocker_hand['best_cards'][1] )
+
+                var idx = -1;
+                for(var i = 0 ; i < players.length ; i++ ){
+                    if( players[i].pocker_hand['type'] < element.pocker_hand['type']
+                        || ( players[i].pocker_hand['type'] == element.pocker_hand['type']
+                            && ( players[i].pocker_hand['best_cards'][4] < element.pocker_hand['best_cards'][4]
+                                || ( players[i].pocker_hand['best_cards'][4] == element.pocker_hand['best_cards'][4]
+                                    && players[i].pocker_hand['best_cards'][3] < element.pocker_hand['best_cards'][3] )
+                                || ( players[i].pocker_hand['best_cards'][4] == element.pocker_hand['best_cards'][4]
+                                    && players[i].pocker_hand['best_cards'][3] == element.pocker_hand['best_cards'][3]
+                                    && players[i].pocker_hand['best_cards'][2] < element.pocker_hand['best_cards'][2] )
+                                || ( players[i].pocker_hand['best_cards'][4] == element.pocker_hand['best_cards'][4]
+                                    && players[i].pocker_hand['best_cards'][3] == element.pocker_hand['best_cards'][3]
+                                    && players[i].pocker_hand['best_cards'][2] == element.pocker_hand['best_cards'][2]
+                                    && players[i].pocker_hand['best_cards'][1] < element.pocker_hand['best_cards'][1] )
+                                )
                             )
-                        )
-                )
-                {
-                    winner = element;
+                    )
+                    {
+                        idx = i;
+                        break;
+                    }
+                }
+                if(idx == -1){
+                     players.push(element);
+                }else{
+                    players.splice(idx, 0, element);
                 }
             }
-        }
     });
 
-    this.winner = winner;
-    return winner;
+    if(players.length > 0){
+        winner = players[0];
+        this.playersOrderWithBestCard = players;
+    }
+
+    if(!winner){
+        this.winner = undefined;
+        return false;
+    }else{
+        this.winner = winner;
+        return true;
+    }
 };
+
+Table.prototype.getWinners = function(){
+    var winners = [];
+    var count = 0;
+    var winner = {};
+    while(0 < this.pots.length){
+        if(this.pots[0].chip == 0)
+            break;
+        var player = this.playersOrderWithBestCard[0];
+        winner = {};
+        winner.chip_win = 0;
+        winner.best_cards = [];
+        for(var i = 0 ; i < this.pots.length ;){
+            console.log('i : ' + i + ' chip pot : ' + this.pots[i].chip + ' player ' + this.pots[i].player_id_list);
+            if(this.pots[i].player_id_list.indexOf(player.id) != -1){
+                winner.username = player.username;
+                winner.slot = player.slot;
+                winner.chip_win += this.pots[i].chip;
+                if(!winner.content && player.pocker_hand){
+                    winner.content = Card.getPokerHandRanking(player.pocker_hand['type']);
+                }
+                winner.best_cards = player.pocker_hand['best_cards'];
+
+                player.playing_chip += this.pots[i].chip;
+                winner.playing_chip = player.playing_chip;
+
+                this.pots.splice(0,1);
+            }else{
+                i++;
+            }
+        }
+
+        winners.push(winner);
+        this.playersOrderWithBestCard.splice(0,1);
+    }
+    return winners;
+}
 
 // lưu log của trận đấu
 Table.prototype.saveMatchLog = function(db_connector){
@@ -765,7 +919,7 @@ function Player(id, username){
 
     this.turn_type = util.BEAT_NONE;
 	
-	this.playing_chip = 2000;
+	this.playing_chip = 0;
 
     this.chip = 10000;
 
@@ -800,7 +954,7 @@ Player.prototype.returnChip = function(chip){
     this.chip += actual_chip;
 
 	return actual_chip;
-}
+};
 
 /*
     CARD OF GAME
@@ -839,12 +993,17 @@ function Card(){
         if(this.dealedCard.length == Card.MAX_VALUE - Card.MIN_RANK + 1)
             return new_card;
         do{
+            
             new_card = Card.randomizeValue();
-            if(this.dealedCard.indexOf(new_card) == -1){
-                this.dealedCard.push(new_card);
-                return new_card;
-            }
-        }while(true);
+            
+        }while(this.dealedCard.indexOf(new_card) != -1);
+
+        this.dealedCard.push(new_card);
+        return new_card;
+    };
+
+    this.reset = function(){
+        this.dealedCard = [];
     };
 }
 
@@ -1132,6 +1291,24 @@ Card.getPokerHandRanking = function(type){
         case this.HAND_HIGHT_CARD:          return "High Card";
     }
     return '';
+};
+
+/*
+    Match pot
+ */
+
+function Pot(player_id_list, chip){
+    // players who is follow in Pot
+    if(player_id_list)
+        this.player_id_list = player_id_list;
+    else
+        this.player_id_list = [];
+
+    // total chip in pot
+    if(chip)
+        this.chip = chip;
+    else
+        this.chip = 0;
 }
 
 //
