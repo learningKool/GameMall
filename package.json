@@ -11,9 +11,10 @@
 	"formidable": "1.0.9"
   },
   "engines": {
-	"node": ">= 0.8.8"
+    "node": "0.8.x",
+    "npm":  "1.1.x"
   },
-    "author": {
+  "author": {
 	"name": "baontp",
 	"email": "cardinnguyen85@yahoo.com"
   },

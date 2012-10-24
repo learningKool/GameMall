@@ -44,7 +44,11 @@ var db_config = require('./db_config');
 var db_connector = mysql.createClient(db_config);
 db_connector.query('USE ' + db_config.DATABASE);
 log('connect to database success!');
-
+// assuming io is the Socket.IO server object
+socket.configure(function () { 
+  socket.set("transports", ["xhr-polling"]); 
+  socket.set("polling duration", 10); 
+});
 // Add a connect listener
 socket.on('connection', function(client){
 
