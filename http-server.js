@@ -1,8 +1,7 @@
 
 var http = require("http");
 var url = require("url")
-    , fs = require("fs")
-    , app = require("express")();
+    , fs = require("fs");
 
 function start(route, handle, port) {
     function onRequest(request, response) {
