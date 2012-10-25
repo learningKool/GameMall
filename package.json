@@ -11,8 +11,12 @@
 	"formidable": "1.0.9"
   },
   "engines": {
+<<<<<<< HEAD
     "node": "0.8.8",
 	"npm": "1.1.49"
+=======
+    "node": ">= 0.8.8"
+>>>>>>> parent of c216d74... remove ignore bin
   },
   "author": {
 	"name": "baontp",
