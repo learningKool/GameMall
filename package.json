@@ -1,9 +1,9 @@
 {
-  "name": "apocker.server",
+  "name": "GameMall",
   "version": "0.0.1",
-  "private": true,
+  "private": false,
   "scripts": {
-    "start": "node app"
+    "start": "node server"
   },
   "dependencies": {
 	"socket.io": "0.9.10",
