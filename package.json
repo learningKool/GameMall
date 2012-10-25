@@ -11,8 +11,7 @@
 	"formidable": "1.0.9"
   },
   "engines": {
-    "node": "0.8.x",
-    "npm":  "1.1.x"
+    "node": ">= 0.8.8"
   },
   "author": {
 	"name": "baontp",
