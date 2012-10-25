@@ -30,7 +30,7 @@ var clients = {};
 var game = main_game.game;
 
 // Start the http server
-var server = httpServer.start(router.route, handle, 8080);
+var server = httpServer.start(router.route, handle, process.env['TXPKR_PORT']);
 
 //server.listen(8080);
 //log('HTTP Server is started!');
