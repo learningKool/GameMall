@@ -38,12 +38,12 @@ var server = httpServer.start(router.route, handle, process.env['PORT']);
 var socket = io.listen(server);
 log('Server is started!');
 
-log('trying connect to database....');
-var db_config = require('./db_config');
+// log('trying connect to database....');
+// var db_config = require('./db_config');
 
-var db_connector = mysql.createClient(db_config);
-db_connector.query('USE ' + db_config.DATABASE);
-log('connect to database success!');
+// var db_connector = mysql.createClient(db_config);
+// db_connector.query('USE ' + db_config.DATABASE);
+// log('connect to database success!');
 // assuming io is the Socket.IO server object
 socket.configure(function () { 
   socket.set("transports", ["xhr-polling"]); 
@@ -73,7 +73,7 @@ socket.on('connection', function(client){
         log('delete username: ' + username);
         var player = game.players[username];
         if(player){
-            db_connector.query('UPDATE user SET last_logout=NOW() WHERE id=?', [player.id]);
+            // db_connector.query('UPDATE user SET last_logout=NOW() WHERE id=?', [player.id]);
             if(player.table){
                 var slot = player.slot;
                 if(player.table.removePlayer(player)){
@@ -104,8 +104,8 @@ socket.on('connection', function(client){
                 }
             }
             // trả chip còn dư cho hệ thống
-            if(player.playing_chip > 0)
-                db_connector.query('INSERT INTO log_chip VALUES(?,?,NOW())', [player.id, player.playing_chip]);
+            // if(player.playing_chip > 0)
+                // db_connector.query('INSERT INTO log_chip VALUES(?,?,NOW())', [player.id, player.playing_chip]);
 
             delete game.players[username];
         }
@@ -121,30 +121,30 @@ socket.on('connection', function(client){
 
         var username = data.username;
         var password = data.password;
-        db_connector.query('SELECT * FROM user WHERE `name` = ?', [username],
-            function(err, rs1){
-                if (err) {
-                  log(err);
-                }
+        // db_connector.query('SELECT * FROM user WHERE `name` = ?', [username],
+            // function(err, rs1){
+                // if (err) {
+                  // log(err);
+                // }
 
-                var result = 1;
-                if(rs1.length == 0){
-                    db_connector.query('INSERT INTO user(`name`, `password`, active) VALUES(?, MD5(?), 0)', [username, password]
-                        , function(err, rs2){
-                            if (err) {
-                              log(err);
-                            }else{
-                                client.emit(util.EMIT_REGISTRY_ACCOUNT, {result: result});
-                            }
-                        }
-                    );
+                // var result = 1;
+                // if(rs1.length == 0){
+                    // db_connector.query('INSERT INTO user(`name`, `password`, active) VALUES(?, MD5(?), 0)', [username, password]
+                        // , function(err, rs2){
+                            // if (err) {
+                              // log(err);
+                            // }else{
+                                // client.emit(util.EMIT_REGISTRY_ACCOUNT, {result: result});
+                            // }
+                        // }
+                    // );
                     
-                } else {
-                    result = -1;
-                    client.emit(util.EMIT_REGISTRY_ACCOUNT, {result: result});
-                }
-            }
-        );
+                // } else {
+                    // result = -1;
+                    // client.emit(util.EMIT_REGISTRY_ACCOUNT, {result: result});
+                // }
+            // }
+        // );
     });
 
     client.on(util.EMIT_LOGIN, function(data){
@@ -152,19 +152,20 @@ socket.on('connection', function(client){
 
         var username = data.username;
         var password = data.password;
-        var query = db_connector.query('SELECT * FROM user WHERE `name` = ?', [username],// AND `password` = MD5(?)
-	        function(err, results){
-                if (err) {
-                  log(err);
-                }
+        // var query = db_connector.query('SELECT * FROM user WHERE `name` = ?', [username],// AND `password` = MD5(?)
+	        // function(err, results){
+                // if (err) {
+                  // log(err);
+                // }
 
-                var result_login = 1;
+                // var result_login = 1;
                 
-                if(results.length == 0){
-                    result_login = -1;
-                }else if(results[0].active == 0){
-                    result_login = -2;
-                }else{
+                // if(results.length == 0){
+                    // result_login = -1;
+                // }else if(results[0].active == 0){
+                    // result_login = -2;
+                // }else
+				{
                     var player = main_game.CreatePlayer(results[0].id, username);
                     if(player == undefined){
                         log('player is undefined');
@@ -179,7 +180,7 @@ socket.on('connection', function(client){
                         broadcastInGame(util.EMIT_LOGIN, {type: 1, username: username}, game.players, true, username);
                         responseListTables(client);
 
-                        db_connector.query('UPDATE user SET last_login=NOW() WHERE id=?', [results[0].id]);
+                        // db_connector.query('UPDATE user SET last_login=NOW() WHERE id=?', [results[0].id]);
 
                         responseEventLog(username, "vừa vào game!", util.STYLE_YELLOW);
                         responsePersonalInfo(client, player);
@@ -189,7 +190,7 @@ socket.on('connection', function(client){
                 client.emit(util.EMIT_LOGIN, {type: 0, result: result_login});
                 if(result_login != 1)
                     client.disconnect();
-            });
+            // });
     });
 
     // user create table
@@ -548,8 +549,8 @@ socket.on('connection', function(client){
 
         if(player.state == util.PLAYER_STATE_WAITING){
             var loaded_chip = player.loadChipToPlay(data.value);
-            if(loaded_chip > 0)
-                db_connector.query('INSERT INTO log_chip VALUES(?,?,NOW())', [player.id, -loaded_chip]);
+            // if(loaded_chip > 0)
+                // db_connector.query('INSERT INTO log_chip VALUES(?,?,NOW())', [player.id, -loaded_chip]);
 
             client.emit(util.EMIT_GET_CHIP, {value: loaded_chip});
             responsePersonalInfo(client, player);
@@ -566,9 +567,9 @@ socket.on('connection', function(client){
 
         if(player.state == util.PLAYER_STATE_WAITING){
             var returned_chip = player.returnChip(data.value);
-            if(returned_chip > 0){
-                db_connector.query('INSERT INTO log_chip VALUES(?,?,NOW())', [player.id, returned_chip]);
-            }
+            // if(returned_chip > 0){
+                // db_connector.query('INSERT INTO log_chip VALUES(?,?,NOW())', [player.id, returned_chip]);
+            // }
 
             client.emit(util.EMIT_RETURN_CHIP, {value: returned_chip});
             responsePersonalInfo(client, player);
@@ -689,7 +690,7 @@ function processTable(table){
 //                broadcastTable(util.EMIT_RESULT_CONTENT, {winners: winners}, table);
             }
 
-			table.saveMatchLog(db_connector);
+			// table.saveMatchLog(db_connector);
             log('End of match');
 
             // delay for refresh table
