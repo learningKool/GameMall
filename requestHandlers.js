@@ -3,6 +3,7 @@ var querystring = require("querystring"),
     formidable = require("formidable");
 
 var dir_name = './html_vuong';
+
 function index(response){
   fs.readFile( dir_name + "/index.html", function(error, file) {
     if(error) {
@@ -12,6 +13,8 @@ function index(response){
     } else {
       response.writeHead(200, {'Content-Type': 'text/html','Content-Length':file.length});
       response.write(file);
+      response.write('<script type="text/javascript">var port = ' + process.env['LOCAL_PORT']
+          + '<script type="text/javascript"> var http_url = ' + process.env['HTTP_URL'] + ';</script>');
       response.end();
     }
   });

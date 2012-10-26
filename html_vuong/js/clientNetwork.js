@@ -37,7 +37,7 @@
             if(!socket)
 			{
                 socket = io.connect(
-                    'http://localhost:8080'
+                    http_url + ':' + port
                 );
 
                 //socket.connect();
