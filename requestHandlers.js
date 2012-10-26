@@ -11,11 +11,13 @@ function index(response){
       response.write(error + "\n");
       response.end();
     } else {
-      response.writeHead(200, {'Content-Type': 'text/html','Content-Length':file.length});
-      response.write(file);
-      response.write('<script type="text/javascript">var port = ' + process.env['LOCAL_PORT']
-          + '<script type="text/javascript"> var http_url = ' + process.env['HTTP_URL'] + ';</script>');
-      response.end();
+        var port = process.env['LOCAL_PORT'];
+        var http_url = process.env['HTTP_URL'];
+//
+        var script = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+        response.writeHead(200, {'Content-Type': 'text/html','Content-Length':file.length});
+        response.write(file);
+        response.end();
     }
   });
 }

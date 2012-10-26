@@ -36,8 +36,9 @@
 		function reconnect(){
             if(!socket)
 			{
+                var host_str = http_url + ':' + port;
                 socket = io.connect(
-                    http_url + ':' + port
+                    host_str
                 );
 
                 //socket.connect();

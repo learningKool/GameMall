@@ -1,0 +1,1 @@
+var port = "8080" , http_url = "http://localhost";
