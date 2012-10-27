@@ -10,7 +10,7 @@ function index(response){
       response.write(error + "\n");
       response.end();
     } else {
-	console.log(typeof file);
+//	console.log(typeof file);
       response.writeHead(200, {'Content-Type': 'text/html','Content-Length':file.length});
       response.write(file);
       response.end();
@@ -25,7 +25,7 @@ function dieukhien(response){
       response.write(error + "\n");
       response.end();
     } else {
-	console.log(typeof file);
+//	console.log(typeof file);
       response.writeHead(200, {'Content-Type': 'text/html','Content-Length':file.length});
       response.write(file);
       response.end();
@@ -38,26 +38,26 @@ function loadData(response, request, param){
 //    var jsFile = pathname.split('/')[1];
     var file_name = dir_name + param;
     if(loaded_files[file_name]){
-        console.log('Get file %s from cache', file_name);
+//        console.log('Get file %s from cache', file_name);
         response.write(loaded_files[file_name]);
         response.end();
-        console.log('Get cached OK!!');
+//        console.log('Get cached OK!!');
     }else{
         fs.readFile( dir_name + param, function(error, file) {
              if(!error){
                 response.write(file);
-                 loaded_files[file_name] = file;
+//                 loaded_files[file_name] = file;
              }else{
                  console.log('can not load %s',file_name);
              }
             response.end();
-            console.log('load file %s OK!!!',file_name);
+//            console.log('load file %s OK!!!',file_name);
         });
     }
 }
 
 function start(response) {
-  console.log("Request handler 'start' was called.");
+//  console.log("Request handler 'start' was called.");
 
   var body = '<html>'+
     '<head>'+
@@ -79,12 +79,12 @@ function start(response) {
 }
 
 function upload(response, request) {
-  console.log("Request handler 'upload' was called.");
+//  console.log("Request handler 'upload' was called.");
 
   var form = new formidable.IncomingForm();
-  console.log("about to parse");
+//  console.log("about to parse");
   form.parse(request, function(error, fields, files) {
-    console.log("parsing done");
+//    console.log("parsing done");
 
     /* Possible error on Windows systems:
        tried to rename to an already existing file */
@@ -102,7 +102,7 @@ function upload(response, request) {
 }
 
 function show(response) {
-  console.log("Request handler 'show' was called.");
+//  console.log("Request handler 'show' was called.");
   fs.readFile("/tmp/test.png", "binary", function(error, file) {
     if(error) {
       response.writeHead(500, {"Content-Type": "text/plain"});

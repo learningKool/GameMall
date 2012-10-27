@@ -2,7 +2,7 @@ function route(handle, pathname, response, request) {
 //     console.log("About to route a request for " + pathname);
 
     var str = pathname.split('/');
-    console.log(str);
+//    console.log(str);
     if(str.length > 1){
         if (typeof handle['/' + str[1]] === 'function') {
             handle['/' + str[1]](response, request, pathname);
