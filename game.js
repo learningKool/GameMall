@@ -107,6 +107,7 @@ function Table(_id, host){
     this.lastest_winner = null;
 
     this.pots = [];
+
     this.current_pot = null;
 
     this.card = new Card();
@@ -507,6 +508,7 @@ Table.prototype.startMatch = function(player){
 
     // get started time of match
     this.started_time = new Date().getTime();
+    this.host_lastedMatch = this.host_player.username;
 	// catch user id play this match for logging
     var played_slot = [];
     this.players.forEach( function(element){
@@ -870,8 +872,22 @@ Table.prototype.getWinners = function(){
 
 // lưu log của trận đấu
 Table.prototype.saveMatchLog = function(db_connector){
-    db_connector.query('INSERT INTO log_match VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)'
-        , [this.id, this.started_time, this.blind, this.total_chip
+//    db_connector.query('INSERT INTO log_match VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)'
+//        , [this.id, this.started_time, this.blind, this.total_chip
+//            , this.played_slot[0] ? this.played_slot[0] : -1
+//            , this.played_slot[1] ? this.played_slot[1] : -1
+//            , this.played_slot[2] ? this.played_slot[2] : -1
+//            , this.played_slot[3] ? this.played_slot[3] : -1
+//            , this.played_slot[4] ? this.played_slot[4] : -1
+//            , this.played_slot[5] ? this.played_slot[5] : -1
+//            , this.played_slot[6] ? this.played_slot[6] : -1
+//            , this.played_slot[7] ? this.played_slot[7] : -1
+//            , this.winner ? this.winner.id : -1 ]
+//    );
+    db_connector.query('INSERT INTO public.log_match' +
+        '(table_id, started_time, blind, host_name, slot_1, slot_2, slot_3, slot_4, slot_5, slot_6, slot_7, slot_8) ' +
+        'VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)'
+        , [this.id, this.started_time, this.blind, this.host_lastedMatch
             , this.played_slot[0] ? this.played_slot[0] : -1
             , this.played_slot[1] ? this.played_slot[1] : -1
             , this.played_slot[2] ? this.played_slot[2] : -1
@@ -879,10 +895,8 @@ Table.prototype.saveMatchLog = function(db_connector){
             , this.played_slot[4] ? this.played_slot[4] : -1
             , this.played_slot[5] ? this.played_slot[5] : -1
             , this.played_slot[6] ? this.played_slot[6] : -1
-            , this.played_slot[7] ? this.played_slot[7] : -1
-            , this.winner ? this.winner.id : -1 ]
+            , this.played_slot[7] ? this.played_slot[7] : -1]
     );
-
     delete this.played_slot;
 };
 

@@ -3,7 +3,6 @@ var querystring = require("querystring"),
     formidable = require("formidable");
 
 var dir_name = './html_vuong';
-
 function index(response){
   fs.readFile( dir_name + "/index.html", function(error, file) {
     if(error) {
@@ -11,16 +10,29 @@ function index(response){
       response.write(error + "\n");
       response.end();
     } else {
-        var port = process.env['LOCAL_PORT'];
-        var http_url = process.env['HTTP_URL'];
-//
-        var script = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
-        response.writeHead(200, {'Content-Type': 'text/html','Content-Length':file.length});
-        response.write(file);
-        response.end();
+	console.log(typeof file);
+      response.writeHead(200, {'Content-Type': 'text/html','Content-Length':file.length});
+      response.write(file);
+      response.end();
     }
   });
 }
+
+function dieukhien(response){
+  fs.readFile( dir_name + "/dieukhien.html", function(error, file) {
+    if(error) {
+      response.writeHead(500, {"Content-Type": "text/plain"});
+      response.write(error + "\n");
+      response.end();
+    } else {
+	console.log(typeof file);
+      response.writeHead(200, {'Content-Type': 'text/html','Content-Length':file.length});
+      response.write(file);
+      response.end();
+    }
+  });
+}
+
 var loaded_files = {};
 function loadData(response, request, param){
 //    var jsFile = pathname.split('/')[1];
@@ -109,3 +121,4 @@ exports.upload = upload;
 exports.show = show;
 exports.index = index;
 exports.loadData = loadData;
+exports.dieukhien = dieukhien;

@@ -1,0 +1,368 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>::Index::</title>
+    <meta charset="utf-8">
+    <!-- css -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/jquery.jscrollpane.css" rel="stylesheet">
+    <link href="css/jquery-ui.css" rel="stylesheet">
+    <!-- javascript -->
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" /> -->
+    <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.jscrollpane.min.js"></script>
+    <script type="text/javascript" src="js/mwheelIntent.js"></script>
+    <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+	<script type="text/javascript" src="js/jemotion.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/socket.io.js"></script>
+	<script type="text/javascript" src="js/clientNetwork.js"></script>
+	<script type="text/javascript" src="js/game.js"></script>
+	<script type="text/javascript" src="js/state.js"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript" src="js/config.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            "use strict";
+            //$('#qLogin').modal();
+            //$('.t_active').jScrollPane();
+            $('.bottom-body').hide();
+            $('.main-body .body_r').hide();
+            //$('#canvas').hide();
+			$('.t_active').jScrollPane();
+            $('.log-box').jScrollPane();
+            $('.chat-content').jScrollPane();
+            
+            changePage(PAGE_LOBBY);
+//            canvasRun();
+        });
+        updateSlider(10);
+    </script>
+</head>
+<body>
+    <div class="main-body">
+        <!--left container body-->
+        <div class="body_l">
+            <div class="navbar" id="_topnavbar">
+                <div class="container">
+                    <div class="navbar-inner no-corner">
+                        <strong class="brand">Poker</strong>
+                        <a href="#qRecharge" role="button" class="btn-recharge" data-toggle="modal">Nạp tiền</a>
+                        <a href="#qLogin" role="button" class="btn btn-primary" data-toggle="modal">Đăng nhập</a>
+                        <a href="#qRegister" class="btn btn-danger" role="button" class="btn" data-toggle="modal">Đăng ký</a>
+                        <div class="navbar-elm pull-left">
+                            <a href="#" class="avatar">User Info</a>
+                            <span class="username"></span><br />
+                            <span class="money"></span>
+                            <a href="#none" class="btn-logout" role="button"></a>
+                        </div>
+                        <!--div class="timer-box">
+                            <div class="timer-elm" style="height: 20px"></div>
+                            <span class="timer-text">20s</span>
+                        </div-->
+                        <div class="navbar-elm pull-right result-match">
+                            <p><strong>KẾT QUẢ TRONG BÀN</strong></p>
+                            <p>10<strong class="red_">♠</strong>7<strong class="black_">♥</strong>2<strong class="red_">♦</strong>3<strong class="black_">♣</strong></p>
+                        </div>
+                        <div class="navbar-elm pull-right">
+                            <a href="#none" class="btn-home pull-right">Home</a>
+                            <a href="#none" class="btn-help pull-right">Help</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="body">
+                <!--button play-now -->
+                <div class="playnow" href="#none">
+                    <a class="btn-playnow" href="#none"><img src="img/playnow_btn.gif"/></a>
+                </div>
+                <!--rooms list-->
+                <div class="containe room-table">
+                    <ul id="_room_list" class="nav nav-tabs">
+                        <li class="active"><a id="all" href="#t_all" data-toggle="tab">Tất cả</a></li>
+                        <!--li><a id="availables" href="#t_availables" data-toggle="tab">Bàn trống</a></li>
+                        <li><a id="not_playing" href="#t_not_playing" data-toggle="tab">Chưa chơi</a></li-->
+                    </ul>
+                    <div id="_room_list_content" class="tab-content">
+                    <!--content tab1-->
+                    <div class="tab-pane active" id="t_all">
+                        <div class="header-list">
+                            <div class="td base_unit">Mức tiền</div>
+                            <div class="td name">Chủ phòng</div>
+                            <div class="td player_count">Ghế trống</div>
+                            <div class="td required">Giới hạn</div>
+                            <div class="td ext clearfix"></div>
+                        </div>
+                        <div class="content-list t_active" id="table_list">
+                            <!--<div class="tr">-->
+                                <!--<div class="td base_unit">$2,000</div>-->
+                                <!--<div class="td name">alexader_vi</div>-->
+                                <!--<div class="td player_count">-->
+                                    <!--<div class="bg_c empty7">-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="td required">$40,000</div>-->
+                                <!--<div class="td ext">-->
+                                    <!--<a href="#"></a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--div class="clearfix"></div-->
+                        </div>
+                    </div>
+                    <!--content tab2-->
+                    <div class="tab-pane" id="t_availables">
+                        <div class="header-list">
+                            <div class="td base_unit">Mức tiền</div>
+                            <div class="td name">Chủ phòng</div>
+                            <div class="td player_count">Ghế trống</div>
+                            <div class="td required">Giới hạn</div>
+                            <div class="td ext clearfix"></div>
+                        </div>
+                        <div class="content-list">
+                            <!--<div class="tr">-->
+                                <!--<div class="td base_unit">$2,000</div>-->
+                                <!--<div class="td name">alexader_vi</div>-->
+                                <!--<div class="td player_count">-->
+                                    <!--<div class="bg_c empty8">-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="td required">$40,000</div>-->
+                                <!--<div class="td ext">-->
+                                    <!--<a href="#"></a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    <!--content tab3-->
+                    <div class="tab-pane" id="t_not_playing">
+                        <div class="header-list">
+                            <div class="td base_unit">Mức tiền</div>
+                            <div class="td name">Chủ phòng</div>
+                            <div class="td player_count">Ghế trống</div>
+                            <div class="td required">Giới hạn</div>
+                            <div class="td ext clearfix"></div>
+                        </div>
+                        <div class="content-list">
+                            <!--<div class="tr">-->
+                                <!--<div class="td base_unit">$2,000</div>-->
+                                <!--<div class="td name">alexader_vi</div>-->
+                                <!--<div class="td player_count">-->
+                                    <!--<div class="bg_c empty8">-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="td required">$40,000</div>-->
+                                <!--<div class="td ext">-->
+                                    <!--<a href="#"></a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    </div>
+                    <div class="_room_list_bottom">
+                        <a href="#none" id="" class="btn-createRoom" onclick="createTable();">Tạo phòng mới</a>
+                    </div>
+                </div>
+                <!--chatbox & log game-->
+                <div class="chat-container">
+                    <div class="log-box">
+                        <p><span class="blue">latitude.d620</span> vừa đăng nhập</p>
+                        <p><span class="yellow">adminz</span> vừa thắng 2000$</p>
+                    </div>
+                    <h6 style="line-height: 14px; padding: 0 10px">CHAT</h6>
+                    <div class="chat-box">
+                        <div class="chat-content">
+                            <p><span class="chat-elm">adminz</span> Đẹp trai ghê mày :D</p>
+                        </div>
+                        <div class="chat-tool">
+                            <input type="text" class="chat-input" value="" placeholder="Nhập nội dung chat" />
+                            <a href="#none" class="btn-enterchat">Enter</a>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+				<!--table-play-game-->
+                <div class="table-play-game">
+                    <div class="card_on_board">
+                    </div>
+                    <span class="pull-right white folk-money"><strong>Mức cược</strong>:<strong class="orange">$</strong></span>
+                    <!--ban choi game-->
+                    <div class="table-game">
+                    </div>
+                    <!--Canvas-->
+                    <canvas id="canvas" class="canvas main"></canvas>
+                    <div class="change_slot">
+                    </div>
+                    <a href="#none" class="btn-join-match">Ready!</a>
+					<a href="#none" class="btn-startgame">Bắt đầu</a>
+                    <!--dat cuoc-->
+                    <div class="bottom-game">
+                        <div class="ready-play">
+                            <div class="check-container">
+                                <a class="check-item fold" href="#none">
+                                    <input type="checkbox" value="fold" class="checkbox fold"><span id="fold">FOLD</span>
+                                </a>
+                                <a class="check-item check_fold" href="#none">
+                                    <input type="checkbox" value="check_fold" class="checkbox check_fold"><span>CHECK/FOLD</span>
+                                </a>
+                                <a class="check-item check" href="#none">
+                                    <input type="checkbox" value="check" class="checkbox check"><span id="check">CHECK</span>
+                                </a>
+                                <a class="check-item call_any" href="#none">
+                                    <input type="checkbox" value="callany" class="checkbox callany"><span>CALL ANY</span>
+                                </a>
+                                <a class="check-item call" href="#none">
+                                    <input type="checkbox" value="check" class="checkbox call"><span id="call">CALL</span>
+                                </a>
+                            </div>
+                            <a class="btn-raise" href="#none">Raise</a>
+                            <!--<a class="btn-invite-friends" href="#">Mời bạn</a>-->
+                        </div>
+						<div class="ready-play">
+							<div>
+								<p>
+									<input type="text" id="raise-amount" style="border: 0; color: #f6931f; font-weight: bold;height:15px;margin-bottom:-5px;width:60px;display:block" />
+								</p>
+								<div id="slider-range-min"></div>
+							</div>
+						</div>
+                    </div>
+                </div>
+			</div>
+        </div>
+        <!--right container body-->
+        <div class="body_r">
+            <div class="navbar-inner no-corner">
+                <h5>TIN TỨC - XẾP HẠNG</h5>
+            </div>
+            <div class="log-tab pull-right">
+                <ul id="_log_list" class="nav nav-tabs">
+                    <li class="active"><a id="news" href="#t_news" data-toggle="tab">Tin tức</a></li>
+                    <li><a id="progamer" href="#t_progamer" data-toggle="tab">Cao thủ</a></li>
+                    <li><a id="rich" href="#t_rich" data-toggle="tab">Đại gia</a></li>
+                </ul>
+                <div id="_log_list_content" class="tab-content">
+                    <div class="tab-pane active" id="t_news">
+                        <div class="">
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="t_progamer">
+                        tab pro gamer
+                    </div>
+                    <div class="tab-pane" id="t_rich">
+                        tab rich
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="bottom-body">
+        <ul id="_audience_list" class="nav nav-tabs all_people">
+            <li class="active"><a id="audience" href="#t_audience" data-toggle="tab">Tin tức</a></li>
+            <li><a id="friends" href="#t_friends" data-toggle="tab">Cao thủ</a></li>
+            <li><a id="all_people" href="#t_all_people" data-toggle="tab">Đại gia</a></li>
+        </ul>
+        <div id="_audience_list_content" class="tab-content">
+            <div class="tab-pane active" id="t_audience">
+                <div class="list-t-audience list-2">
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="t_friends">
+                <div class="list-t-friends list-2">
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="t_all_people">
+                <div class="list-t-all_people list-2">
+                    <div class="player-box">
+                        <div class="name">Vương</div>
+                        <div class="avatar"></div>
+                        <div class="money">$<span>13.9k</span></div>
+                        <div class="level">Level:<span>7</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Login-->
+    <div class="modal fade" id="qLogin" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="center-box">
+            <div class="modal-header">
+                <h3>Đăng nhập</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row-inner">
+                    <input type="text" class="" id="tb_username" value="zhan" placeholder="Tên đăng nhập" />
+                </div>
+                <div class="row-inner">
+                    <input type="password" class="" id="tb_password" placeholder="Mật khẩu" />
+                </div>
+				<div class="row-inner red_" id="txt_notification_login"></div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" id="login_btn_login">Đăng nhập</a>
+                <a href="#" class="btn" id="login_btn_login_back" data-dismiss="modal" aria-hidden="true">Quay lại</a>
+            </div>
+        </div>
+    </div>
+    <!--Register-->
+    <div class="modal hide fade" id="qRegister" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="center-box">
+            <div class="modal-header">
+                <h3>Đăng ký</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row-inner">
+                    <input type="text" id="tb_username_regis" placeholder="Tên đăng nhập" />
+                </div>
+                <div class="row-inner">
+                    <input type="text" id="tb_pass_regis" placeholder="Mật khẩu" />
+                </div>
+                <div class="row-inner">
+                    <input type="text" id="tb_re_pass_regis" placeholder="Nhập lại mật khẩu" />
+                </div>
+                <div class="row-inner red_" id="txt_notification_regis"></div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger">Đăng ký</a>
+                <a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Quay lại</a>
+            </div>
+        </div>
+    </div>
+	<!--qRecharge-->
+    <div class="modal fade" id="qRecharge" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="center-box">
+            <div class="modal-header">
+                <h3>Nạp tiền</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row-inner">
+					<p>Nạp chip để chơi trong bàn. Tối đa nạp là 10k chip.</p>
+                    <input type="text" class="recharge_amount" placeholder="Số tiền cần nạp" value="2000" />
+                    <p class="red_" id="txt_notification_recharge"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" href="#none" id="btn_returnChip">Trả Chip</a>
+                <a class="btn btn-primary" href="#none" id="btn_recharge">Nạp Chip</a>
+                <a href="#none" class="btn" id="btn_recharge_back" data-dismiss="modal" aria-hidden="true">Quay lại</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

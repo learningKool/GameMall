@@ -32,6 +32,11 @@ exports.util = {
     ,   EMIT_RESULT_MATCH   : 'result_match'
     ,   EMIT_RESULT_CONTENT : 'result_content'
     ,   EMIT_REFRESH_TABLE  : 'refresh_table'
+
+    ,   EMIT_ADMIN_HISTORY      :   'user_history'
+    ,   EMIT_ADMIN_STATISTICS   :   'statistics'
+    ,   EMIT_ADMIN_ACCOUNT      :   'account'
+    ,   EMIT_ADMIN_ACOUNT_TREAT :   'account_treat'
     
     ,   PLAYER_STATE_WAITING: 0
     ,   PLAYER_STATE_PLAYING: 1

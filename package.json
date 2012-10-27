@@ -1,5 +1,5 @@
 {
-  "name": "GameMall",
+  "name": "texas_node",
   "version": "0.0.1",
   "private": false,
   "scripts": {
@@ -8,11 +8,13 @@
   "dependencies": {
 	"socket.io": "0.9.10",
 	"mysql": "0.9.6",
-	"formidable": "1.0.9"
+	"formidable": "1.0.9",
+	"pg": "0.8.6",
+	"express": "latest"
   },
   "engines": {
     "node": "0.8.8",
-	"npm": "1.1.49"
+    "npm": "1.1.49"
   },
   "author": {
 	"name": "baontp",
