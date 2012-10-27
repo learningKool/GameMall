@@ -50,17 +50,6 @@ var conString = "tcp://postgres:root@localhost:5432/pokerdb";
 var db_connector = new pg.Client(process.env.DATABASE_URL);
 //var db_connector = new pg.Client(conString);
 db_connector.connect();
-//var db_connector = mysql.createClient(db_config);
-//db_connector.query('USE ' + db_config.DATABASE);
-log('connect to database success!');
-// assuming io is the Socket.IO server object
-socket.configure(function () { 
-  socket.set("transports", ["xhr-polling"]); 
-  socket.set("polling duration", 10); 
-});
-// Add a connect listener
-socket.on('connection', function(client){
-
     db_connector.query('CREATE TABLE "user" ' +
         '(' +
         'name text NOT NULL,' +
@@ -76,6 +65,49 @@ socket.on('connection', function(client){
         'OIDS=FALSE' +
         ')'
     );
+db_connector.query('CREATE TABLE user_history' +
+    '(' +
+    'user_id integer NOT NULL,' +
+    'table_played integer NOT NULL,' +
+    'win_order integer NOT NULL,' +
+    'win_chips integer NOT NULL,' +
+    'CONSTRAINT user_history_fk_user_id FOREIGN KEY (user_id)' +
+    'REFERENCES "user" (id) MATCH SIMPLE' +
+    'ON UPDATE NO ACTION ON DELETE NO ACTION' +
+    ')WITH (OIDS=FALSE)');
+db_connector.query('CREATE TABLE log_chip (' +
+    'user_id integer NOT NULL,' +
+    'chip_amount integer NOT NULL,' +
+    'created_date timestamp without time zone NOT NULL,' +
+    'CONSTRAINT log_chip_fk_user_id FOREIGN KEY (user_id)' +
+    'REFERENCES "user" (id) MATCH SIMPLE' +
+    'ON UPDATE NO ACTION ON DELETE NO ACTION' +
+    ')WITH (OIDS=FALSE)');
+db_connector.query('CREATE TABLE log_match(' +
+    'table_id integer NOT NULL,' +
+    'started_time bigint NOT NULL DEFAULT 0::bigint,' +
+    'blind integer NOT NULL DEFAULT 10,' +
+    'slot_1 integer NOT NULL DEFAULT (-1),' +
+    'slot_2 integer NOT NULL DEFAULT (-1),' +
+    'slot_3 integer NOT NULL DEFAULT (-1),' +
+    'slot_4 integer NOT NULL DEFAULT (-1),' +
+    'slot_5 integer NOT NULL DEFAULT (-1),' +
+    'slot_6 integer NOT NULL DEFAULT (-1),' +
+    'slot_7 integer NOT NULL DEFAULT (-1),' +
+    'slot_8 integer NOT NULL DEFAULT (-1),' +
+    'host_name text NOT NULL,' +
+    'CONSTRAINT pk_table_id PRIMARY KEY (table_id)' +
+    ')WITH (OIDS=FALSE)');
+//var db_connector = mysql.createClient(db_config);
+//db_connector.query('USE ' + db_config.DATABASE);
+log('connect to database success!');
+// assuming io is the Socket.IO server object
+socket.configure(function () { 
+  socket.set("transports", ["xhr-polling"]); 
+  socket.set("polling duration", 10); 
+});
+// Add a connect listener
+socket.on('connection', function(client){
 
     clients[client.id] = client;
 //    var card = card;
