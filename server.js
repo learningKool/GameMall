@@ -65,6 +65,7 @@ var usernames = {};
 socket.on('connection', function(client){
 
     clients[client.id] = client;
+    log(client.id + ' call a connect to server!');
 //    var card = card;
 //    var hand = [17,29,45,49,51];//
 //    var best_hand = card.getBestPokerHand([53,55], hand);
