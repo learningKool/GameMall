@@ -50,21 +50,6 @@ var conString = "tcp://postgres:root@localhost:5432/pokerdb";
 var db_connector = new pg.Client(process.env.DATABASE_URL);
 //var db_connector = new pg.Client(conString);
 db_connector.connect();
-    db_connector.query('CREATE TABLE "user" ' +
-        '(' +
-        'name text NOT NULL,' +
-        'password text,' +
-        'active boolean,' +
-        'id serial NOT NULL,' +
-        'last_logout timestamp without time zone,' +
-        'last_login timestamp without time zone,' +
-        'type smallint NOT NULL DEFAULT 0,' +
-        'CONSTRAINT pk_id PRIMARY KEY (id)' +
-        ')' +
-        'WITH (' +
-        'OIDS=FALSE' +
-        ')'
-    );
 db_connector.query('CREATE TABLE user_history' +
     '(' +
     'user_id integer NOT NULL,' +
