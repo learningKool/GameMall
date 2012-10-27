@@ -34,7 +34,7 @@ var game = main_game.game;
 
 // Start the http server
 var server = httpServer.start(router.route, handle, process.env['PORT']);
-
+log('port: ' + process.env['PORT']);
 //server.listen(8080);
 //log('HTTP Server is started!');
 // Create a Socket.IO instance, passing it our server
