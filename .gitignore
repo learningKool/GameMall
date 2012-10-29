@@ -163,3 +163,4 @@ pip-log.txt
 .idea/
 .env
 heroku.log
+.svn/
