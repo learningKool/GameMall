@@ -180,6 +180,8 @@ function changePage(page){
     main_page = page;
     switch(page){
         case PAGE_LOBBY: //PAGE_LOBBY
+            $('.btn.btn-primary').show();
+            $('.btn.btn-danger').show();
             $('.playnow').show();
             $('.containe.room-table').show();
             $('.content-list.t_active').jScrollPane({autoReinitialise:true, stickToBottom:true});
@@ -196,7 +198,7 @@ function changePage(page){
             $('.playnow').show();
             $('.containe.room-table').show();
             $('.content-list.t_active').jScrollPane({autoReinitialise:true, stickToBottom:true});
-            
+
             $('.table-play-game').hide();
             $('.chat-container').hide();
             $('.btn-recharge').show();

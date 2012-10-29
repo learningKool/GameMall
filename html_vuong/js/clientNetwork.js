@@ -65,7 +65,8 @@
                 // Add a disconnect listener
                 socket.on('disconnect',function() {
 //                    log('<span style="color:#ff0000;">The client has disconnected!</span>');
-                    window.location.reload();
+//                    window.location.reload();
+                    changePage(PAGE_LOBBY);
                 });
 
                 //
