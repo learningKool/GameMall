@@ -7,5 +7,3 @@ var util_admin = {
     ,   EMIT_ADMIN_ACCOUNT      :   'account'
     ,   EMIT_ADMIN_ACOUNT_TREAT :   'account_treat'
 };
-
-// exports.util = Util;
