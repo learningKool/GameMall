@@ -15,7 +15,7 @@
 		function reconnect(){
             if(!socket)
 			{
-                var host_str = http_url + ':' + port;
+                var host_str = 'http://' + http_url + ':' + port;
                 socket = io.connect(
                     host_str
                 );

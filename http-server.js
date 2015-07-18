@@ -6,7 +6,7 @@ var url = require("url")
 function start(route, handle, port) {
     function onRequest(request, response) {
         var path_name = url.parse(request.url).pathname;
-//        console.log("\nRequest for " + path_name + " received.");
+        // console.log("\nRequest for " + path_name + " received.");
 
         route(handle, path_name, response, request);
 

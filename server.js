@@ -18,8 +18,7 @@ var handle = {};
     handle["/img"] = requestHandlers.loadData;
 
 
-var io = require('socket.io')
-    , mysql = require('mysql')
+var mysql = require('mysql')
     , url = require("url")
     , pg = require("pg");
 
@@ -31,14 +30,16 @@ var main_game = require("./game")
 // List Client who is online 
 var clients = {};
 var game = main_game.game;
+var port = 80;
 
 // Start the http server
-var server = httpServer.start(router.route, handle, process.env['PORT']);
-log('port: ' + process.env['PORT']);
+var server = httpServer.start(router.route, handle, port);
+log('port: ' + port);
 //server.listen(8080);
 //log('HTTP Server is started!');
 // Create a Socket.IO instance, passing it our server
-var socket = io.listen(server);
+var io = require('socket.io')(server);
+// var socket = io.listen(server);
 log('Server is started!');
 log('update config for client');
 clientCfg.updateConfig();
@@ -55,14 +56,14 @@ var db_connector = new pg.Client(process.env.DATABASE_URL);
 //db_connector.query('USE ' + db_config.DATABASE);
 log('connect to database success!');
 // assuming io is the Socket.IO server object
-socket.configure(function () { 
-  socket.set("transports", ["xhr-polling"]); 
-  socket.set("polling duration", 10); 
-});
+// socket.configure(function () { 
+  // socket.set("transports", ["xhr-polling"]); 
+  // socket.set("polling duration", 10); 
+// });
 
 var usernames = {};
 // Add a connect listener
-socket.on('connection', function(client){
+io.on('connection', function(client){
 
     clients[client.id] = client;
     log(client.id + ' call a connect to server!');

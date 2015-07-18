@@ -6,8 +6,8 @@
     "start": "node server"
   },
   "dependencies": {
-	"socket.io": "0.9.10",
-	"mysql": "0.9.6",
+	"socket.io": "latest",
+	"mysql": "latest",
 	"formidable": "1.0.9",
 	"pg": "0.8.6",
 	"express": "latest"

@@ -1,1 +1,1 @@
-var port = "undefined" , http_url = "undefined";
+var port = "80" , http_url = "127.0.0.1";
