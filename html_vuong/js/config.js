@@ -1,1 +1,1 @@
-var port = "8080" , http_url = "http://localhost";
+var port = "undefined" , http_url = "undefined";
