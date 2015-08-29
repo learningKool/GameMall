@@ -1,9 +1,9 @@
 
 var fs = require("fs");
+var port = 8080;//process.env['PORT'];
+var http_url = "127.0.0.1";//process.env['HTTP_URL'];
 
 function updateClientConfig(){
-	var port = 80;
-	var http_url = '127.0.0.1';
 	var script = 'var port = "' + port + '" , http_url = "' + http_url + '";';
 	console.log(script.length + ' : ' + script);
 	var buf = new Buffer(script.length);
@@ -23,3 +23,5 @@ function updateClientConfig(){
 }
 
 exports.updateConfig = updateClientConfig;
+exports.port = port;
+exports.http_url = http_url;

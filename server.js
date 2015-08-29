@@ -30,11 +30,10 @@ var main_game = require("./game")
 // List Client who is online 
 var clients = {};
 var game = main_game.game;
-var port = 80;
 
 // Start the http server
-var server = httpServer.start(router.route, handle, port);
-log('port: ' + port);
+var server = httpServer.start(router.route, handle, clientCfg.port);
+log('port: ' + clientCfg.port);
 //server.listen(8080);
 //log('HTTP Server is started!');
 // Create a Socket.IO instance, passing it our server

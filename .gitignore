@@ -164,3 +164,4 @@ pip-log.txt
 .env
 heroku.log
 .svn/
+node_modules/socket.io/node_modules/.bin/istanbul
